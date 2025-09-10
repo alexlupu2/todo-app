@@ -1,24 +1,23 @@
-import React, { useEffect } from "react";
-import ToDoApp from "todo-app"; // resolved via Vite alias to ../island/src
+import React, { useState } from "react";
+import { ConnectedToDoApp } from "todo-app"; // resolved via Vite alias to ../island/src
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { fetchTasks, createTask, toggleTask, deleteTask, clearError } from "../features/tasks/tasksSlice";
 import { logout } from "../features/auth/authSlice";
 import ErrorBanner from "./ErrorBanner";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
+
 export default function HostToDo() {
   const dispatch = useAppDispatch();
-  const tasks = useAppSelector((s) => s.tasks.items);
-  const error = useAppSelector((s) => s.tasks.error);
-  const authUser = useAppSelector((s) => s.auth.token);
+  const authToken = useAppSelector((s) => s.auth.token);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    dispatch(fetchTasks());
-  }, [dispatch]);
-
-  const onCreateTask = (title: string) => dispatch(createTask(title)).unwrap();
-  const onToggleTask = (id: string, completed: boolean) => dispatch(toggleTask({ id, completed })).unwrap();
-  const onDeleteTask = (id: string) => dispatch(deleteTask(id)).unwrap();
   const handleLogout = () => dispatch(logout());
+  const handleError = (err: string) => setError(err);
+  const clearError = () => setError(null);
+
+  if (!authToken) {
+    return null; // This shouldn't happen since we're only rendered when authenticated
+  }
 
   return (
     <div style={{ maxWidth: 640, margin: "32px auto", padding: "0 16px" }}>
@@ -48,12 +47,13 @@ export default function HostToDo() {
         </button>
       </div>
       
-      {error && <ErrorBanner message={error} onClose={() => dispatch(clearError())} />}
-      <ToDoApp
-        tasks={tasks}
-        onCreateTask={onCreateTask}
-        onToggleTask={onToggleTask}
-        onDeleteTask={onDeleteTask}
+      {error && <ErrorBanner message={error} onClose={clearError} />}
+      <ConnectedToDoApp
+        authInfo={{ 
+          token: authToken, 
+          apiBaseUrl: API_BASE_URL 
+        }}
+        onError={handleError}
         autoFocus
       />
     </div>

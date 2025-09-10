@@ -25,3 +25,29 @@ export type ToDoAppProps = {
   addButtonLabel?: string;     // default: "Add"
   emptyStateLabel?: string;    // default: "Nothing to do yet"
 };
+
+export type AuthInfo = {
+  token: string;
+  apiBaseUrl?: string;
+};
+
+export type ConnectedToDoAppProps = {
+  authInfo: AuthInfo;
+  
+  className?: string;
+  style?: React.CSSProperties;
+
+  /** Force-disable all controls (consumer-controlled) */
+  disabled?: boolean;
+
+  /** Autofocus the input on mount; default: true */
+  autoFocus?: boolean;
+
+  /** Fixed English labels, with minimal optional overrides */
+  placeholder?: string;        // default: "Add a task…"
+  addButtonLabel?: string;     // default: "Add"
+  emptyStateLabel?: string;    // default: "Nothing to do yet"
+  
+  /** Optional error display callback */
+  onError?: (error: string) => void;
+};
