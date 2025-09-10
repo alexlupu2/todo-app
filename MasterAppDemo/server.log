@@ -1,0 +1,14 @@
+
+> MasterAppDemo@0.1.0 dev
+> vite
+
+Port 5173 is in use, trying another one...
+
+  VITE v5.4.20  ready in 473 ms
+
+  ➜  Local:   http://localhost:5174/
+  ➜  Network: use --host to expose
+12:37:23 PM [vite] page reload src/app/store.ts
+12:37:43 PM [vite] hmr update /src/components/HostToDo.tsx
+12:37:54 PM [vite] hmr update /src/components/HostToDo.tsx
+12:38:00 PM [vite] hmr update /src/App.tsx

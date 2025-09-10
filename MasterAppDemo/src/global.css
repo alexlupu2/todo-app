@@ -1,0 +1,4 @@
+:root { color-scheme: light; font-synthesis-weight: none; }
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; }
+body { margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji"; background: #fafafa; color: #111; }
