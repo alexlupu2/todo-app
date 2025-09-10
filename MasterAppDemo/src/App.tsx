@@ -1,10 +1,13 @@
 import React from "react";
-import { useAppSelector } from "./app/hooks";
-import HostToDo from "./components/HostToDo";
-import LoginForm from "./components/LoginForm";
+import { createRouter, RouterProvider } from "@tanstack/react-router";
+import { routeTree } from "./routeTree.gen";
+import { store } from "./app/store";
+
+const router = createRouter({
+  routeTree,
+  context: { store },
+});
 
 export default function App() {
-  const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
-  
-  return isAuthenticated ? <HostToDo /> : <LoginForm />;
+  return <RouterProvider router={router} />;
 }

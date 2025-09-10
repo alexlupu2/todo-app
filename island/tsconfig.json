@@ -11,7 +11,7 @@
     "declarationDir": "dist",
     "emitDeclarationOnly": false,
     "noEmit": false,
-    "rootDir": ".",
+    "rootDir": "./src",
     "types": ["react", "react-dom"]
   },
   "include": ["src", "dev"]
