@@ -49,10 +49,7 @@ export default function HostToDo() {
 
       {error && <ErrorBanner message={error} onClose={clearError} />}
       <ConnectedToDoApp
-        authInfo={{
-          token: authToken,
-          apiBaseUrl: API_BASE_URL,
-        }}
+        token={authToken}
         onError={handleError}
         autoFocus
       />

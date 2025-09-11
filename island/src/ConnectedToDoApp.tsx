@@ -16,12 +16,11 @@ import type { ConnectedToDoAppProps } from "./types";
 // Create a store instance
 const store = createToDoStore();
 
-// : React.FC<Omit<ConnectedToDoAppProps, "authInfo"> & { authToken: string; apiBaseUrl: string }>
+// : React.FC<Omit<ConnectedToDoAppProps, "authInfo"> & { token: string; apiBaseUrl: string }>
 
 const ConnectedToDoAppInner = (props: ConnectedToDoAppProps) => {
-  const { authInfo, onError } = props;
-
-  const { token: authToken, apiBaseUrl = "http://localhost:3000" } = authInfo;
+  const { token, onError } = props;
+  const apiBaseUrl = "http://localhost:3000";
 
   const dispatch = useToDoDispatch();
   const tasks = useToDoSelector((s) => s.tasks.items);
@@ -30,17 +29,17 @@ const ConnectedToDoAppInner = (props: ConnectedToDoAppProps) => {
 
   // Set auth info when component mounts or token changes
   useEffect(() => {
-    if (authToken && authToken !== currentToken) {
-      dispatch(setAuth({ token: authToken, apiBaseUrl }));
+    if (token && token !== currentToken) {
+      dispatch(setAuth({ token: token, apiBaseUrl }));
     }
-  }, [dispatch, authToken, apiBaseUrl, currentToken]);
+  }, [dispatch, token, apiBaseUrl, currentToken]);
 
   // Fetch tasks when auth is set
   useEffect(() => {
-    if (currentToken === authToken && authToken) {
+    if (currentToken === token && token) {
       dispatch(fetchTasks());
     }
-  }, [dispatch, currentToken, authToken]);
+  }, [dispatch, currentToken, token]);
 
   // Handle errors
   useEffect(() => {
@@ -71,12 +70,12 @@ const ConnectedToDoAppInner = (props: ConnectedToDoAppProps) => {
 };
 
 const ConnectedToDoApp: React.FC<ConnectedToDoAppProps> = ({
-  authInfo,
+  token,
   ...props
 }) => {
   return (
     <Provider store={store}>
-      <ConnectedToDoAppInner authInfo={authInfo} {...props} />
+      <ConnectedToDoAppInner token={token} {...props} />
     </Provider>
   );
 };
