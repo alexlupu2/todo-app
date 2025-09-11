@@ -1,16 +1,18 @@
-import axios from "axios";
-import type { Task } from "../types";
+import type { Task, HttpClient } from "../types";
 
-export const createTasksApi = (authToken: string, baseURL: string = "http://localhost:3000") => {
-  const api = axios.create({
-    baseURL,
-    headers: { 
-      "Content-Type": "application/json", 
-      Accept: "application/json",
-      Authorization: `Bearer ${authToken}`
-    },
-    withCredentials: false,
-  });
+let httpClient: HttpClient | null = null;
+
+export const setHttpClient = (client: HttpClient) => {
+  httpClient = client;
+};
+
+const ensureClient = (): HttpClient => {
+  if (!httpClient) throw new Error("HTTP client not initialized");
+  return httpClient;
+};
+
+export const createTasksApi = () => {
+  const api = ensureClient();
 
   const toTask = (x: any): Task => ({
     id: String(x?.id ?? x?._id ?? x?.uuid),
@@ -38,6 +40,6 @@ export const createTasksApi = (authToken: string, baseURL: string = "http://loca
     async deleteTask(id: string): Promise<string> {
       await api.delete(`/tasks/${id}`);
       return id;
-    }
+    },
   };
 };

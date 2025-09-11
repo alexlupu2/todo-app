@@ -9,8 +9,6 @@ type TasksState = {
   togglingById: Record<string, boolean>;
   deletingById: Record<string, boolean>;
   error: string | null;
-  authToken: string | null;
-  apiBaseUrl: string;
 };
 
 const initialState: TasksState = {
@@ -20,61 +18,33 @@ const initialState: TasksState = {
   togglingById: {},
   deletingById: {},
   error: null,
-  authToken: null,
-  apiBaseUrl: "http://localhost:3000",
 };
 
-export const setAuth = createAsyncThunk(
-  "tasks/setAuth",
-  async ({ token, apiBaseUrl }: { token: string; apiBaseUrl?: string }) => {
-    return { token, apiBaseUrl: apiBaseUrl || "http://localhost:3000" };
-  }
-);
-
-export const fetchTasks = createAsyncThunk(
-  "tasks/fetchAll", 
-  async (_, { getState }) => {
-    const state = getState() as { tasks: TasksState };
-    if (!state.tasks.authToken) {
-      throw new Error("No auth token available");
-    }
-    const api = createTasksApi(state.tasks.authToken, state.tasks.apiBaseUrl);
-    return await api.fetchTasks();
-  }
-);
+export const fetchTasks = createAsyncThunk("tasks/fetchAll", async () => {
+  const api = createTasksApi();
+  return await api.fetchTasks();
+});
 
 export const createTask = createAsyncThunk(
-  "tasks/create", 
-  async (title: string, { getState }) => {
-    const state = getState() as { tasks: TasksState };
-    if (!state.tasks.authToken) {
-      throw new Error("No auth token available");
-    }
-    const api = createTasksApi(state.tasks.authToken, state.tasks.apiBaseUrl);
+  "tasks/create",
+  async (title: string) => {
+    const api = createTasksApi();
     return await api.createTask(title);
   }
 );
 
 export const toggleTask = createAsyncThunk(
   "tasks/toggle",
-  async ({ id, completed }: { id: string; completed: boolean }, { getState }) => {
-    const state = getState() as { tasks: TasksState };
-    if (!state.tasks.authToken) {
-      throw new Error("No auth token available");
-    }
-    const api = createTasksApi(state.tasks.authToken, state.tasks.apiBaseUrl);
+  async ({ id, completed }: { id: string; completed: boolean }) => {
+    const api = createTasksApi();
     return await api.toggleTask(id, completed);
   }
 );
 
 export const deleteTask = createAsyncThunk(
-  "tasks/delete", 
-  async (id: string, { getState }) => {
-    const state = getState() as { tasks: TasksState };
-    if (!state.tasks.authToken) {
-      throw new Error("No auth token available");
-    }
-    const api = createTasksApi(state.tasks.authToken, state.tasks.apiBaseUrl);
+  "tasks/delete",
+  async (id: string) => {
+    const api = createTasksApi();
     return await api.deleteTask(id);
   }
 );
@@ -88,17 +58,10 @@ const slice = createSlice({
     },
     clearTasks(state) {
       state.items = [];
-      state.authToken = null;
     },
   },
   extraReducers: (builder) => {
     builder
-      // setAuth
-      .addCase(setAuth.fulfilled, (state, action) => {
-        state.authToken = action.payload.token;
-        state.apiBaseUrl = action.payload.apiBaseUrl;
-      })
-
       // fetch
       .addCase(fetchTasks.pending, (state) => {
         state.loading = true;

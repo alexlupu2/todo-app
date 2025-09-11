@@ -3,7 +3,6 @@ import { Provider } from "react-redux";
 import { createToDoStore } from "./store/store";
 import { useToDoDispatch, useToDoSelector } from "./store/hooks";
 import {
-  setAuth,
   fetchTasks,
   createTask,
   toggleTask,
@@ -12,34 +11,23 @@ import {
 } from "./store/tasksSlice";
 import ToDoApp from "./ToDoApp";
 import type { ConnectedToDoAppProps } from "./types";
+import { setHttpClient } from "./api/tasks";
 
 // Create a store instance
 const store = createToDoStore();
 
-// : React.FC<Omit<ConnectedToDoAppProps, "authInfo"> & { token: string; apiBaseUrl: string }>
-
 const ConnectedToDoAppInner = (props: ConnectedToDoAppProps) => {
-  const { token, onError } = props;
-  const apiBaseUrl = "http://localhost:3000";
+  const { httpClient, onError } = props;
 
   const dispatch = useToDoDispatch();
   const tasks = useToDoSelector((s) => s.tasks.items);
   const error = useToDoSelector((s) => s.tasks.error);
-  const currentToken = useToDoSelector((s) => s.tasks.authToken);
 
-  // Set auth info when component mounts or token changes
+  // Initialize HTTP client once
   useEffect(() => {
-    if (token && token !== currentToken) {
-      dispatch(setAuth({ token: token, apiBaseUrl }));
-    }
-  }, [dispatch, token, apiBaseUrl, currentToken]);
-
-  // Fetch tasks when auth is set
-  useEffect(() => {
-    if (currentToken === token && token) {
-      dispatch(fetchTasks());
-    }
-  }, [dispatch, currentToken, token]);
+    setHttpClient(httpClient);
+    dispatch(fetchTasks());
+  }, [dispatch, httpClient]);
 
   // Handle errors
   useEffect(() => {
@@ -69,13 +57,10 @@ const ConnectedToDoAppInner = (props: ConnectedToDoAppProps) => {
   );
 };
 
-const ConnectedToDoApp: React.FC<ConnectedToDoAppProps> = ({
-  token,
-  ...props
-}) => {
+const ConnectedToDoApp: React.FC<ConnectedToDoAppProps> = (props) => {
   return (
     <Provider store={store}>
-      <ConnectedToDoAppInner token={token} {...props} />
+      <ConnectedToDoAppInner {...props} />
     </Provider>
   );
 };

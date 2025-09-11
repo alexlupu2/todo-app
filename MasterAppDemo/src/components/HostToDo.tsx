@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import  ConnectedToDoApp  from "todo-app";
+import React, { useMemo, useState } from "react";
+import ConnectedToDoApp from "todo-app";
+import axios from "axios";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { logout } from "../features/auth/authSlice";
 import ErrorBanner from "./ErrorBanner";
@@ -14,6 +15,18 @@ export default function HostToDo() {
   const handleLogout = () => dispatch(logout());
   const handleError = (err: string) => setError(err);
   const clearError = () => setError(null);
+
+  const httpClient = useMemo(() => {
+    return axios.create({
+      baseURL: API_BASE_URL,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${authToken}`,
+      },
+      withCredentials: false,
+    });
+  }, [authToken]);
 
   if (!authToken) {
     return null; // This shouldn't happen since we're only rendered when authenticated
@@ -48,11 +61,7 @@ export default function HostToDo() {
       </div>
 
       {error && <ErrorBanner message={error} onClose={clearError} />}
-      <ConnectedToDoApp
-        token={authToken}
-        onError={handleError}
-        autoFocus
-      />
+      <ConnectedToDoApp httpClient={httpClient} onError={handleError} autoFocus />
     </div>
   );
 }
