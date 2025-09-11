@@ -1,3 +1,2 @@
-export { default } from "./ToDoApp";
-export { default as ConnectedToDoApp } from "./ConnectedToDoApp";
-export type { Task, ToDoAppProps, ConnectedToDoAppProps, AuthInfo } from "./types";
+export { default } from "./ConnectedToDoApp";
+export type { Task, ConnectedToDoAppProps, AuthInfo } from "./types";

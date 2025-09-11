@@ -21,9 +21,9 @@ export type ToDoAppProps = {
   autoFocus?: boolean;
 
   /** Fixed English labels, with minimal optional overrides */
-  placeholder?: string;        // default: "Add a task…"
-  addButtonLabel?: string;     // default: "Add"
-  emptyStateLabel?: string;    // default: "Nothing to do yet"
+  placeholder?: string; // default: "Add a task…"
+  addButtonLabel?: string; // default: "Add"
+  emptyStateLabel?: string; // default: "Nothing to do yet"
 };
 
 export type AuthInfo = {
@@ -33,7 +33,7 @@ export type AuthInfo = {
 
 export type ConnectedToDoAppProps = {
   authInfo: AuthInfo;
-  
+
   className?: string;
   style?: React.CSSProperties;
 
@@ -44,10 +44,10 @@ export type ConnectedToDoAppProps = {
   autoFocus?: boolean;
 
   /** Fixed English labels, with minimal optional overrides */
-  placeholder?: string;        // default: "Add a task…"
-  addButtonLabel?: string;     // default: "Add"
-  emptyStateLabel?: string;    // default: "Nothing to do yet"
-  
+  placeholder?: string; // default: "Add a task…"
+  addButtonLabel?: string; // default: "Add"
+  emptyStateLabel?: string; // default: "Nothing to do yet"
+
   /** Optional error display callback */
   onError?: (error: string) => void;
 };

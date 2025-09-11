@@ -2,19 +2,27 @@ import React, { useEffect } from "react";
 import { Provider } from "react-redux";
 import { createToDoStore } from "./store/store";
 import { useToDoDispatch, useToDoSelector } from "./store/hooks";
-import { setAuth, fetchTasks, createTask, toggleTask, deleteTask, clearError } from "./store/tasksSlice";
+import {
+  setAuth,
+  fetchTasks,
+  createTask,
+  toggleTask,
+  deleteTask,
+  clearError,
+} from "./store/tasksSlice";
 import ToDoApp from "./ToDoApp";
 import type { ConnectedToDoAppProps } from "./types";
 
 // Create a store instance
 const store = createToDoStore();
 
-const ConnectedToDoAppInner: React.FC<Omit<ConnectedToDoAppProps, "authInfo"> & { authToken: string; apiBaseUrl: string }> = ({
-  authToken,
-  apiBaseUrl,
-  onError,
-  ...toDoAppProps
-}) => {
+// : React.FC<Omit<ConnectedToDoAppProps, "authInfo"> & { authToken: string; apiBaseUrl: string }>
+
+const ConnectedToDoAppInner = (props: ConnectedToDoAppProps) => {
+  const { authInfo, onError } = props;
+
+  const { token: authToken, apiBaseUrl = "http://localhost:3000" } = authInfo;
+
   const dispatch = useToDoDispatch();
   const tasks = useToDoSelector((s) => s.tasks.items);
   const error = useToDoSelector((s) => s.tasks.error);
@@ -58,22 +66,17 @@ const ConnectedToDoAppInner: React.FC<Omit<ConnectedToDoAppProps, "authInfo"> & 
       onCreateTask={onCreateTask}
       onToggleTask={onToggleTask}
       onDeleteTask={onDeleteTask}
-      {...toDoAppProps}
     />
   );
 };
 
-const ConnectedToDoApp: React.FC<ConnectedToDoAppProps> = ({ 
-  authInfo, 
-  ...props 
+const ConnectedToDoApp: React.FC<ConnectedToDoAppProps> = ({
+  authInfo,
+  ...props
 }) => {
   return (
     <Provider store={store}>
-      <ConnectedToDoAppInner
-        authToken={authInfo.token}
-        apiBaseUrl={authInfo.apiBaseUrl || "http://localhost:3000"}
-        {...props}
-      />
+      <ConnectedToDoAppInner authInfo={authInfo} {...props} />
     </Provider>
   );
 };

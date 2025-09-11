@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { ConnectedToDoApp } from "todo-app"; // resolved via Vite alias to ../island/src
+import  ConnectedToDoApp  from "todo-app";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { logout } from "../features/auth/authSlice";
 import ErrorBanner from "./ErrorBanner";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
+const API_BASE_URL = "http://localhost:3000";
 
 export default function HostToDo() {
   const dispatch = useAppDispatch();
@@ -21,15 +21,15 @@ export default function HostToDo() {
 
   return (
     <div style={{ maxWidth: 640, margin: "32px auto", padding: "0 16px" }}>
-      <div style={{ 
-        display: "flex", 
-        justifyContent: "space-between", 
-        alignItems: "center", 
-        marginBottom: 16 
-      }}>
-        <span style={{ fontSize: 14, color: "#6b7280" }}>
-          Welcome back!
-        </span>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: 16,
+        }}
+      >
+        <span style={{ fontSize: 14, color: "#6b7280" }}>Welcome back!</span>
         <button
           onClick={handleLogout}
           style={{
@@ -40,18 +40,18 @@ export default function HostToDo() {
             borderRadius: 6,
             fontSize: 12,
             cursor: "pointer",
-            fontWeight: 500
+            fontWeight: 500,
           }}
         >
           Sign Out
         </button>
       </div>
-      
+
       {error && <ErrorBanner message={error} onClose={clearError} />}
       <ConnectedToDoApp
-        authInfo={{ 
-          token: authToken, 
-          apiBaseUrl: API_BASE_URL 
+        authInfo={{
+          token: authToken,
+          apiBaseUrl: API_BASE_URL,
         }}
         onError={handleError}
         autoFocus
